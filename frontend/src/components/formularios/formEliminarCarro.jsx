@@ -1,11 +1,13 @@
 import Boton from "../botones/boton";
 
+const API_URL = "http://104.248.75.163:3001";
+
 function FormEliminarCarro({ carro, onEliminar, onCerrar }) {
   const eliminarCarro = (e) => {
     e.preventDefault();
     const id = Number(carro.id ?? carro);
 
-    fetch(`http://localhost:3001/carros/${id}`, { method: "DELETE" })
+    fetch(`${API_URL}/carros/${id}`, { method: "DELETE" })
       .then(() => {
         onEliminar(id);
         onCerrar();
@@ -20,6 +22,7 @@ function FormEliminarCarro({ carro, onEliminar, onCerrar }) {
           ¿Seguro que deseas eliminar el carro{" "}
           <b>{carro.marca} {carro.modelo}</b>?
         </p>
+
         <Boton type="submit" texto="Eliminar" />
         <button type="button" onClick={onCerrar}>Cancelar</button>
       </form>
