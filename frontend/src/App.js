@@ -4,7 +4,7 @@ import TablaCarros from './components/tablas/tabla';
 import FormCrearCarro from './components/formularios/formCrearCarro';
 import FormActualizarCarro from './components/formularios/formActualizarCarro';
 import FormEliminarCarro from './components/formularios/formEliminarCarro';
-import FormBuscarCarro from './components/formularios/formBuscar';
+
 
 const API_URL = "http://104.248.75.163:3001";
 
@@ -48,8 +48,7 @@ function App() {
           {/* Crear */}
           <FormCrearCarro setCarros={setCarros} carros={carros} />
 
-          {/* Buscar */}
-          <FormBuscarCarro />
+          
 
           {/* Actualizar */}
           {carroSeleccionado && (
