@@ -12,26 +12,45 @@ function FormCrearCarro({ setCarros, carros }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    console.log("📤 ENVIANDO:", { marca, modelo, anio, color });
+
     fetch(`${API_URL}/carros`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        marca,
-        modelo,
-        anio,
-        color,
-      }),
+      body: JSON.stringify({ marca, modelo, anio, color }),
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        console.log("📥 STATUS:", response.status);
+
+        let data;
+        try {
+          data = await response.json();
+        } catch (err) {
+          console.error("❌ ERROR AL PARSEAR JSON:", err);
+          throw err;
+        }
+
+        console.log("📥 DATA RESPONSE:", data);
+        return data;
+      })
       .then((data) => {
-        console.log(data);
+        if (!data || !data.id) {
+          console.error("❌ ERROR: el backend no devolvió un objeto válido:", data);
+          return;
+        }
+
         setCarros([...carros, data]);
+
         setMarca('');
         setModelo('');
         setAnio('');
         setColor('');
+
+        console.log("✅ CARRO AGREGADO CORRECTAMENTE");
       })
-      .catch((err) => console.error('Error al crear carro:', err));
+      .catch((err) => {
+        console.error("❌ ERROR FETCH:", err);
+      });
   };
 
   return (
