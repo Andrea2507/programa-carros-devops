@@ -1,13 +1,9 @@
-
-
 services:
   db:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: Andrea123
       MYSQL_DATABASE: carrosdb
-    ports:
-      - "3310:3306"
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
@@ -20,10 +16,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: npx nodemon app.js
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
       DB_HOST: db
       DB_USER: root
@@ -39,24 +31,11 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
-    command: npm start
-    stdin_open: true
-    tty: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - CHOKIDAR_INTERVAL=300
-      - WATCHPACK_POLLING=true
-      - WDS_SOCKET_PORT=3000
-      - WDS_SOCKET_HOST=localhost
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      dockerfile: Dockerfile
     ports:
-      - "8090:3000"
+      - "8090:80"
     depends_on:
       - backend
-
 
 volumes:
   dbdata:
