@@ -1,8 +1,8 @@
-version: "3.9"
+
 
 services:
   db:
-    image: mysql:8
+    image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: Andrea123
       MYSQL_DATABASE: carrosdb
@@ -15,13 +15,15 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
-    networks:
-      - dokploy-network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    command: npx nodemon app.js
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     environment:
       DB_HOST: db
       DB_USER: root
@@ -33,29 +35,28 @@ services:
         condition: service_healthy
     ports:
       - "3001:3001"
-    networks:
-      - dokploy-network
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    command: npm start
+    stdin_open: true
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=300
+      - WATCHPACK_POLLING=true
+      - WDS_SOCKET_PORT=3000
+      - WDS_SOCKET_HOST=localhost
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "8085:3000"
     depends_on:
       - backend
-    ports:
-      - "8080:80"
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.carros-frontend.rule=Host(`carros.dokploy.app`)
-      - traefik.http.routers.carros-frontend.entrypoints=websecure
-      - traefik.http.routers.carros-frontend.tls.certresolver=letsencrypt
-      - traefik.http.services.carros-frontend.loadbalancer.server.port=80
-    networks:
-      - dokploy-network
+
 
 volumes:
   dbdata:
-
-networks:
-  dokploy-network:
-    external: true
