@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: Andrea123
       MYSQL_DATABASE: carrosdb
     ports:
-      - "3307:3306"
+      - "3310:3306"
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
