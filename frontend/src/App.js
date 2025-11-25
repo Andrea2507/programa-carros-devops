@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>  app carros</h1>
+        <h1>  app nuevos carros</h1>
 
         {/* Tabla de carros */}
         <TablaCarros
